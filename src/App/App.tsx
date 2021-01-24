@@ -1,4 +1,5 @@
 import * as React from "react";
+import Button from "components/Button";
 
 import styles from "./App.module.scss";
 
@@ -6,11 +7,10 @@ const App: React.FC = () => {
   return (
     <main className={styles.container}>
       <header className={styles.header}>
-        <h1>
-          <img alt="TradeHelm" src="/logo.svg" />
-        </h1>
-        <h3>Lets get this party started</h3>
+        <h1>Supermaket list</h1>
+        <h3> 0 Item(s)</h3>
       </header>
+      <Button>Prueba</Button>
     </main>
   );
 };
