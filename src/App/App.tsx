@@ -10,7 +10,7 @@ const App: React.FC = () => {
         <h1>Supermaket list</h1>
         <h3> 0 Item(s)</h3>
       </header>
-      <Button>Prueba</Button>
+      <Button>Add item</Button>
     </main>
   );
 };
