@@ -6,47 +6,65 @@ let dates: Database;
 
 function getDate() {
   if (dates) {
-    return dates;
+    return;
   }
   if (window.indexedDB) {
     dates = new IndexdDB("Supermarket");
 
-    return dates;
+    return;
   }
   // TODO Agregar local storage como base de datos.
   console.log("Es necesario usar localStorage");
   dates = new IndexdDB("Supermarket");
 
-  return dates;
+  return;
 }
 
-export async function save(descrpition: string): Promise<boolean> {
-  const date = getDate();
+export function save(descrpition: string): Promise<Item> {
+  getDate();
 
-  if (descrpition.length <= 0) {
-    throw new Error("La descripcion tiene que ser mayor a 0 de longitud");
-  }
+  return new Promise((resolve, reject) => {
+    if (descrpition.length <= 0) {
+      reject("La descripcion tiene que ser mayor a 0 de longitud");
+    }
+    let lengthList: number;
+    let item: Item;
 
-  const lengthList = ListItems().length + 1;
-  const item: Item = {id: lengthList, descrpition};
+    ListItems()
+      .then((list: Array<Item>) => {
+        lengthList = list.length + 1;
+        item = {id: lengthList, descrpition};
+      })
+      .then(() => {
+        dates.Creaete(item).then((value: Item) => {
+          resolve(value);
+        });
+      })
+      .catch((error) => {
+        reject(error);
+      });
 
-  if (!date.Creaete(item)) {
-    throw new Error("No se a podido guaardar la informacion");
-  }
-
-  return true;
+    return true;
+  });
 }
 
-export function ListItems(): Array<Item> {
-  return getDate().List();
+export function ListItems(): Promise<Array<Item>> {
+  getDate();
+
+  return dates.List();
 }
 
-export function remove(item: Item): boolean {
-  const date = getDate();
+export function remove(item: Item): Promise<Item> {
+  getDate();
 
-  if (!date.Delete(item)) {
-    throw new Error("No se a podido eliminar");
-  }
-
-  return true;
+  return new Promise((resolve, reject) => {
+    dates
+      .Delete(item)
+      .then((value) => {
+        resolve(value);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
