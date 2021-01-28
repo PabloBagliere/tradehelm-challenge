@@ -1,5 +1,5 @@
 import Database from "Utils/Database";
-import IndexdDB from "Utils/indexdDB";
+import IndexedDB from "Utils/indexedDB";
 import Item from "Utils/Item";
 
 let dates: Database;
@@ -9,13 +9,14 @@ function getDate() {
     return;
   }
   if (window.indexedDB) {
-    dates = new IndexdDB("Supermarket");
+    dates = new IndexedDB();
 
     return;
   }
   // TODO Agregar local storage como base de datos.
   console.log("Es necesario usar localStorage");
-  dates = new IndexdDB("Supermarket");
+  dates = new IndexedDB();
+  dates.OpenConnection("Supermarket");
 
   return;
 }
@@ -36,7 +37,7 @@ export function save(descrpition: string): Promise<Item> {
         item = {id: lengthList, descrpition};
       })
       .then(() => {
-        dates.Creaete(item).then((value: Item) => {
+        dates.Create(item).then((value: Item) => {
           resolve(value);
         });
       })
