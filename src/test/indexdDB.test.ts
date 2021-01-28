@@ -16,34 +16,97 @@ test("Create connection with IndexdDB api", () => {
   expect(new IndexedDB()).toBeInstanceOf(IndexedDB);
 });
 
-test("Create item in indexdDB", async () => {
-  const dataTest = new IndexedDB();
+describe("different ways to create item in indexedDB", () => {
+  test("Create item in indexedDB", async () => {
+    const dataTest = new IndexedDB();
 
-  await dataTest.OpenConnection("Create");
-  const data = await dataTest.Create(itemTest);
+    await dataTest.OpenConnection("Create");
+    const data = await dataTest.Create(itemTest);
 
-  expect(data).toBe(itemTest);
+    expect(data).toBe(itemTest);
+  });
+
+  test("Create item in indexedDB without initializing ", async () => {
+    const dataTest = new IndexedDB();
+
+    try {
+      await dataTest.Create(itemTest);
+    } catch (error) {
+      expect(error).toEqual("No inicializado");
+    }
+  });
+  test("Create item in indexedDB duplicate", async () => {
+    const dataTest = new IndexedDB();
+
+    await dataTest.OpenConnection("Duplicate");
+    try {
+      await dataTest.Create(itemTest);
+      await dataTest.Create(itemTest);
+    } catch (error) {
+      expect(error).toEqual("Error al agregar un item ConstraintError");
+    }
+  });
 });
 
-test("Delete item in IndexedDB", async () => {
-  const dataTest = new IndexedDB();
+describe("different ways to delete item in indexedDB", () => {
+  test("Delete item in IndexedDB", async () => {
+    const dataTest = new IndexedDB();
 
-  await dataTest.OpenConnection("Delete");
-  await dataTest.Create(itemTest);
-  const data = await dataTest.Delete(itemTest);
+    await dataTest.OpenConnection("Delete");
+    await dataTest.Create(itemTest);
+    const data = await dataTest.Delete(itemTest);
 
-  expect(data).toBe(itemTest);
+    expect(data).toBe(itemTest);
+  });
+  test("Delete item in indexedDB without initializing", async () => {
+    const dataTest = new IndexedDB();
+
+    try {
+      await dataTest.Delete(itemTest);
+    } catch (error) {
+      expect(error).toEqual("No inicializado");
+    }
+  });
+  test("Delete iten not exist in indexedDB", async () => {
+    const dataTest = new IndexedDB();
+
+    await dataTest.OpenConnection("NotExist");
+    try {
+      await dataTest.Delete(itemTest);
+    } catch (error) {
+      expect(error).toEqual("Error: item no encontrado");
+    }
+  });
 });
 
-test("List item in IndexedDB", async () => {
-  const dataTest = new IndexedDB();
+describe("different ways to list item in indexedDB", () => {
+  test("List item in IndexedDB", async () => {
+    const dataTest = new IndexedDB();
 
-  await dataTest.OpenConnection("List");
-  for await (const item of itemsList) {
-    dataTest.Create(item);
-  }
+    await dataTest.OpenConnection("List");
+    for await (const item of itemsList) {
+      dataTest.Create(item);
+    }
+    const data = await dataTest.List();
 
-  const data = await dataTest.List();
+    expect(data).toEqual(itemsList);
+  });
+  test("to list item in indexedDB without initializing", async () => {
+    const dataTest = new IndexedDB();
 
-  expect(data).toEqual(expect.arrayContaining(itemsList));
+    try {
+      await dataTest.List();
+    } catch (error) {
+      expect(error).toEqual("No inicializado");
+    }
+  });
+
+  test("list without item in IndexedDB", async () => {
+    const dataTest = new IndexedDB();
+
+    await dataTest.OpenConnection("NotItem");
+    const data = await dataTest.List();
+
+    expect(data).toEqual([]);
+  });
 });

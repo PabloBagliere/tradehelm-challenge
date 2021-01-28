@@ -40,10 +40,26 @@ export default class IndexedDB implements Database {
       const req: IDBRequest = store.add(item);
 
       req.onerror = () => {
-        reject(`Error al agregar un item ${req.error}`);
+        reject(`Error al agregar un item ${req.error?.name}`);
       };
       req.onsuccess = () => {
         resolve(item);
+      };
+    });
+  }
+  Delete(item: Item): Promise<Item> {
+    return new Promise((resolve, reject) => {
+      if (!this.initialized) reject("No inicializado");
+      const store: IDBObjectStore = this.getObjectStore(this.dataSet, mode.READWRITE);
+      const ItemExist: IDBRequest = store.get(item.id);
+
+      ItemExist.onsuccess = () => {
+        if (!ItemExist.result) reject("Error: item no encontrado");
+        store.delete(item.id);
+        resolve(item);
+      };
+      ItemExist.onerror = () => {
+        reject(`Error item no encontrado ${ItemExist.error?.name}`);
       };
     });
   }
@@ -60,11 +76,12 @@ export default class IndexedDB implements Database {
         if (cursor) {
           AllItem.push(cursor.value);
           cursor.continue();
+        } else {
+          resolve(AllItem);
         }
-        resolve(AllItem);
       };
       result.onerror = () => {
-        reject(`Error al buscar en la IndexdDB ${result.error}`);
+        reject(`Error al buscar en la IndexdDB ${result.error?.name}`);
       };
     });
   }
@@ -72,20 +89,5 @@ export default class IndexedDB implements Database {
     const tx = this.db.transaction(store_name, mode);
 
     return tx.objectStore(store_name);
-  }
-  Delete(item: Item): Promise<Item> {
-    return new Promise((resolve, reject) => {
-      if (!this.initialized) reject("No inicializado");
-      const store: IDBObjectStore = this.getObjectStore(this.dataSet, mode.READWRITE);
-      const ItemExist: IDBRequest = store.get(item.id);
-
-      ItemExist.onsuccess = () => {
-        store.delete(item.id);
-        resolve(item);
-      };
-      ItemExist.onerror = () => {
-        reject(`Error item no encontrado ${ItemExist.error}`);
-      };
-    });
   }
 }
