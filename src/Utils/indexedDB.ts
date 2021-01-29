@@ -12,7 +12,6 @@ export default class IndexedDB implements Database {
   private db!: IDBDatabase;
   private dataSet = "Items";
   private initialized = false;
-
   OpenConnection(dbName: string): Promise<void> {
     return new Promise((resolve, reject) => {
       if (this.initialized) resolve();
@@ -32,7 +31,6 @@ export default class IndexedDB implements Database {
       };
     });
   }
-
   Create(item: Item): Promise<Item> {
     return new Promise((resolve, reject) => {
       if (!this.initialized) reject("No inicializado");
