@@ -1,5 +1,5 @@
-import Database from "./Database";
-import Item from "./Item";
+import Database from "types/Database";
+import Item from "types/Item";
 
 enum mode {
   READONLY = "readonly",

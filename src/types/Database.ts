@@ -1,4 +1,4 @@
-import Item from "./Item";
+import Item from "types/Item";
 
 export default interface Database {
   OpenConnection(dbName: string): Promise<void>;

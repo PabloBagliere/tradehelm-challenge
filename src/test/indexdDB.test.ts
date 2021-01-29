@@ -1,6 +1,6 @@
 import "fake-indexeddb/auto";
 import IndexedDB from "Utils/indexedDB";
-import Item from "Utils/Item";
+import Item from "types/Item";
 
 const itemTest: Item = {id: 1, descrpition: "Prueba"};
 const itemsList: Array<Item> = [

@@ -1,6 +1,6 @@
-import Database from "Utils/Database";
+import Database from "types/Database";
 import IndexedDB from "Utils/indexedDB";
-import Item from "Utils/Item";
+import Item from "types/Item";
 
 let dates: Database;
 
