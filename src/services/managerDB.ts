@@ -1,71 +1,55 @@
 import Database from "types/Database";
 import IndexedDB from "Utils/indexedDB";
+import LocalStorage from "Utils/localStorage";
 import Item from "types/Item";
 
-let dates: Database;
+export default class ManagerDB {
+  private DB!: Database;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() {}
 
-function getDate() {
-  if (dates) {
-    return;
-  }
-  if (window.indexedDB) {
-    dates = new IndexedDB();
+  static async initialized(): Promise<ManagerDB> {
+    const Manager = new ManagerDB();
 
-    return;
-  }
-  // TODO Agregar local storage como base de datos.
-  console.log("Es necesario usar localStorage");
-  dates = new IndexedDB();
-  dates.OpenConnection("Supermarket");
-
-  return;
-}
-
-export function save(descrpition: string): Promise<Item> {
-  getDate();
-
-  return new Promise((resolve, reject) => {
-    if (descrpition.length <= 0) {
-      reject("La descripcion tiene que ser mayor a 0 de longitud");
+    if (window.indexedDB) {
+      Manager.DB = new IndexedDB();
+    } else {
+      Manager.DB = new LocalStorage();
     }
-    let lengthList: number;
-    let item: Item;
+    try {
+      await Manager.DB.OpenConnection("Supermaket");
 
-    ListItems()
-      .then((list: Array<Item>) => {
-        lengthList = list.length + 1;
-        item = {id: lengthList, descrpition};
-      })
-      .then(() => {
-        dates.Create(item).then((value: Item) => {
-          resolve(value);
-        });
-      })
-      .catch((error) => {
-        reject(error);
-      });
+      return Manager;
+    } catch (error) {
+      throw new Error(`Error al inicializar el manager ${error}`);
+    }
+  }
+  async createItem(descrpition: string): Promise<Item> {
+    if (descrpition.length <= 0) throw new Error("Item demaciada corta");
+    try {
+      const list = await this.DB.List();
+      const item: Item = {id: list.length, descrpition};
+      const itemCreate = await this.DB.Create(item);
 
-    return true;
-  });
-}
+      return itemCreate;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  async deleteItem(item: Item): Promise<boolean> {
+    try {
+      await this.DB.Delete(item);
 
-export function ListItems(): Promise<Array<Item>> {
-  getDate();
-
-  return dates.List();
-}
-
-export function remove(item: Item): Promise<Item> {
-  getDate();
-
-  return new Promise((resolve, reject) => {
-    dates
-      .Delete(item)
-      .then((value) => {
-        resolve(value);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+      return true;
+    } catch (error) {
+      return error;
+    }
+  }
+  async listItems(): Promise<Array<Item>> {
+    try {
+      return await this.DB.List();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
