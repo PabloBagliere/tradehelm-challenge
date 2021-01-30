@@ -24,6 +24,11 @@ export default class localStorage implements Database {
       try {
         const items: Array<Item> = this.GetListParse();
 
+        items.filter((itemInser) => {
+          if (itemInser.id == item.id || itemInser.descrpition == item.descrpition) {
+            reject("Error item duplicado");
+          }
+        });
         items.push(item);
         this.db.setItem(this.dataSet, JSON.stringify(items));
         resolve(item);
@@ -38,10 +43,10 @@ export default class localStorage implements Database {
       try {
         const items: Array<Item> = this.GetListParse();
 
-        if (items.length == 0) reject("No existe el item");
-        const newList: Array<Item> = items.filter((itemInter) => itemInter != item);
+        if (items.length == 0) reject("Error: No existe el item");
+        const newList: Array<Item> = items.filter((itemInter) => itemInter.id != item.id);
 
-        if (items.length == newList.length) reject("No existe ese item");
+        if (items.length == newList.length) reject("Error: item no encontrado");
 
         this.db.setItem(this.dataSet, JSON.stringify(newList));
         resolve(item);
@@ -63,6 +68,6 @@ export default class localStorage implements Database {
     });
   }
   private GetListParse(): Array<Item> {
-    return JSON.parse(this.db.getItem(this.dataSet) || "{}");
+    return JSON.parse(this.db.getItem(this.dataSet) as string) || [];
   }
 }
