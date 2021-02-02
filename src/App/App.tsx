@@ -1,6 +1,7 @@
 import * as React from "react";
 import Button from "components/Button";
 import Modal from "components/Modal";
+import AddItem from "components/addItem";
 
 import styles from "./App.module.scss";
 
@@ -20,7 +21,7 @@ const App: React.FC = () => {
       <Button onClick={openModal}>Add item</Button>
       {showModal ? (
         <Modal setShowModal={setShowModal} title="Add item">
-          Hola
+          <AddItem />
         </Modal>
       ) : null}
     </main>
