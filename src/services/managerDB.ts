@@ -36,11 +36,9 @@ export default class ManagerDB {
       throw new Error(error);
     }
   }
-  async deleteItem(item: Item): Promise<boolean> {
+  async deleteItem(item: Item): Promise<Item> {
     try {
-      await this.DB.Delete(item);
-
-      return true;
+      return await this.DB.Delete(item);
     } catch (error) {
       return error;
     }
