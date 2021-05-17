@@ -5,7 +5,7 @@ import styles from "./addItem.module.scss";
 
 export default function addItem(): JSX.Element {
   return (
-    <div className={styles.conteiner}>
+    <div className={styles.conteinter}>
       <input className={styles.input} type="text" />
       <Button>Añadir item</Button>
     </div>

@@ -1,6 +1,17 @@
 .conteiner{
   cursor: pointer;
-  background-color: #4C3999;
-  font-size: 1.2rem;
+  background-color: #525291;
+  font-size: 1.5rem;
   border: none;
+  border-radius: 5px;
+  padding: .5em;
+  display: block;
+  box-shadow: 5px 5px 2px #cfcdcd;
+  margin: .5em;
+  letter-spacing: .5px;
+  color: #ffffff;
+
+  @media (min-width: 480px) {
+    margin: .5em 0;
+  }
 }
