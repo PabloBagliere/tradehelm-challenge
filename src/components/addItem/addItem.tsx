@@ -3,11 +3,13 @@ import * as React from "react";
 
 import styles from "./addItem.module.scss";
 
-export default function addItem(): JSX.Element {
+const addItem: React.FC = () => {
   return (
     <div className={styles.conteinter}>
       <input className={styles.input} type="text" />
       <Button>Añadir item</Button>
     </div>
   );
-}
+};
+
+export default addItem;

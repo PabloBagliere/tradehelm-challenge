@@ -3,12 +3,12 @@ import * as ReactDOM from "react-dom";
 
 import styles from "./Modal.module.scss";
 
-interface props {
+interface Props {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  children: React.ReactNode;
   title: string;
 }
-export default function Modal({setShowModal, children, title}: props): JSX.Element {
+
+const Modal: React.FC<Props> = ({setShowModal, children, title}) => {
   const element = document.getElementById("root-modal");
   const modalRef = React.useRef<HTMLDivElement>(null);
 
@@ -53,4 +53,6 @@ export default function Modal({setShowModal, children, title}: props): JSX.Eleme
     </div>,
     element,
   );
-}
+};
+
+export default Modal;
