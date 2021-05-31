@@ -2,9 +2,10 @@ import Database from "types/Database";
 import IndexedDB from "Utils/indexedDB";
 import LocalStorage from "Utils/localStorage";
 
-const ManagerDB = async (): Promise<Database> => {
-  let Manager: Database;
+let Manager: Database;
 
+const ManagerDB = async (): Promise<Database> => {
+  if (Manager) return Manager;
   if (global.indexedDB) {
     Manager = new IndexedDB();
   } else {
