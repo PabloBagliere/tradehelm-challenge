@@ -1,15 +1,15 @@
 import * as React from "react";
 import Button from "components/Button";
 import Modal from "components/Modal";
-import AddItem from "components/addItem";
+import AddItem from "components/AddItem";
 
 import styles from "./App.module.scss";
 
 const App: React.FC = () => {
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = React.useState<boolean>(false);
 
   const openModal = () => {
-    setShowModal(!showModal);
+    setShowModal(true);
   };
 
   return (
@@ -21,7 +21,7 @@ const App: React.FC = () => {
       <Button onClick={openModal}>Add item</Button>
       {showModal ? (
         <Modal setShowModal={setShowModal} title="Add item">
-          <AddItem />
+          <AddItem setShowModal={setShowModal} />
         </Modal>
       ) : null}
     </main>
